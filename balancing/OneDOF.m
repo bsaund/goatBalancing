@@ -32,7 +32,7 @@ function OneDOF
     
 end
 
-function state = forwardSimulate(state, prop, dt)
+function state = forwardSimulate(state, prop, tau, dt)
 %Simulates the forward dynamics for a state dt in the future
 %using rk4
     
@@ -87,9 +87,15 @@ end
 function plotSystem(state, prop)
     foot = [0,0];
     com = foot + prop.l*[sin(state(1)), cos(state(1))];
+    poleOff = .25*[cos(state(2)), sin(state(2))];
+
+    pole = [com - poleOff; com + poleOff];
     
     clf;
     plot([foot(1), com(1)], [foot(2), com(2)]);
+    hold on;
+    plot(pole(:,1), pole(:,2), 'k');
+
     axis([-1,1, -.5, 1.5])
     toc
     drawnow
